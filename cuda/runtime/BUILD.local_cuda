@@ -463,6 +463,32 @@ cc_library(
     ]),
 )
 
+# nvrtc
+cc_import_versioned_sos(
+    name = "nvrtc_so",
+    shared_library = "cuda/lib64/libnvrtc.so",
+)
+
+cc_import(
+    name = "nvrtc_lib",
+    interface_library = "cuda/lib/x64/libnvrtc.so.lib",
+    system_provided = 1,
+    target_compatible_with = ["@platforms//os:windows"],
+)
+
+cc_library(
+    name = "nvrtc",
+    deps = [
+        ":cuda_headers",
+    ] + if_linux([
+        ":nvrtc_so",
+    ]) + if_windows([
+        ":nvrtc_lib",
+    ]),
+)
+
+
+
 # nvtx
 cc_import_versioned_sos(
     name = "nvtx_so",
